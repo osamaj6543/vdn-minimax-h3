@@ -18,6 +18,10 @@ diffusers/
 server_data/
 .pytest_cache/
 
+# frontend build output and dependencies (source stays tracked)
+frontend/node_modules/
+frontend/.next/
+
 # one-off local setup logs (not part of the project)
 /frontend_create.log
 /next_build.log
