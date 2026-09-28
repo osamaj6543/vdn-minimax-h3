@@ -1,0 +1,8 @@
+fastapi>=0.115,<1
+uvicorn[standard]>=0.30
+pydantic>=2.7,<3
+redis>=5.0
+python-multipart>=0.0.9   # FastAPI multipart uploads
+# dev/test only
+pytest>=8
+httpx>=0.27               # fastapi TestClient transport

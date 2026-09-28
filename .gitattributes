@@ -1,0 +1,4 @@
+*.egg-info/
+
+# shell scripts must stay LF (CRLF breaks bash line continuation / braces)
+*.sh text eol=lf

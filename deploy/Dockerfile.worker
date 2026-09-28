@@ -1,0 +1,17 @@
+# GPU worker: CUDA base, the repo's pinned stack, one container per GPU
+# (docker run --gpus device=N, or the compose service's device slot).
+# Build from the repo root; the weights come from the Hub on first assemble
+# (src/paths.py) or mount a prepared ckpts/ volume.
+FROM pytorch/pytorch:2.6.0-cuda12.4-cudnn9-devel
+# NOTE: the repo pins torch 2.13 cu129 + flash-attn-4 for real renders; this
+# base is the smallest image that imports the stack. Align the torch/CUDA
+# version with the repo's README (pip install torch==2.13.0 --index-url
+# .../cu129) before serving production traffic.
+WORKDIR /app
+COPY server/requirements.txt server/requirements.txt
+RUN pip install --no-cache-dir -r server/requirements.txt
+COPY . .
+RUN pip install --no-cache-dir transformers==5.15.0 accelerate==1.14.0 \
+    safetensors==0.8.0 huggingface_hub einops omegaconf
+ENV VDN_BACKEND=redis VDN_REDIS_URL=redis://redis:6379/0
+CMD ["python", "-m", "server.worker"]

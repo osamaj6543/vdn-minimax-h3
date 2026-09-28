@@ -1,0 +1,20 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  server-tests:
+    # GPU-free: the engine lazy-imports torch/src.*, tests run on the memory
+    # store and FakeEngine. Real-weights validation happens on a GPU runner
+    # (see docs/server_plan.md, Phase 1 GPU-pending note).
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r server/requirements.txt
+      - run: python -m pytest -q

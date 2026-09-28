@@ -13,3 +13,16 @@ __pycache__/
 # fetched by scripts/setup_diffusers.sh (upstream pin + diffusers_patches/)
 diffusers/
 *.egg-info/
+
+# inference server runtime data (uploads, rendered mp4s, prompt caches)
+server_data/
+.pytest_cache/
+
+# one-off local setup logs (not part of the project)
+/frontend_create.log
+/next_build.log
+/next_build2.log
+/next_start.log
+/npm_appwrite.log
+/shadcn_add.log
+/shadcn_init.log

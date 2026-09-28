@@ -1,0 +1,32 @@
+# Phase 2 dev deployment: gateway + redis + one fake-engine worker.
+# GPU workers run on the GPU hosts with deploy/Dockerfile.worker:
+#   docker run --gpus device=0 --network host \
+#     -e VDN_REDIS_URL=redis://<gateway-host>:6379/0 vdn-worker
+services:
+  redis:
+    image: redis:7-alpine
+    ports: ["6379:6379"]
+
+  gateway:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.gateway
+    environment:
+      VDN_API_KEYS: "dev-key"
+      VDN_WEBHOOK_SECRET: "change-me"
+    ports: ["8000:8000"]
+    depends_on: [redis]
+
+  worker:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.gateway
+    command: ["python", "-m", "server.worker", "--engine", "fake"]
+    environment:
+      VDN_API_KEYS: "unused"
+    volumes:
+      - worker-data:/app/server_data
+    depends_on: [redis]
+
+volumes:
+  worker-data:
