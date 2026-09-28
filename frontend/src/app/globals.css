@@ -1,0 +1,396 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ---------------------------------------------------------------------------
+   Design tokens — VDN Studio
+   An ink-and-champagne system built from the VDN logo: near-black ink surfaces,
+   a gold (--gold) accent reserved for primary action and brand, and a cool
+   slate ramp for the chrome. Dark is the product theme; light values are kept
+   in sync for print/embed surfaces.
+--------------------------------------------------------------------------- */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains-mono);
+  --font-heading: var(--font-inter);
+  --font-display: var(--font-jost);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  /* app-specific tokens: `bg-surface`, `text-gold`, `border-hairline`, … */
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-hairline: var(--hairline);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-live: var(--live);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  --background: #f6f6f7;
+  --foreground: #101214;
+  --surface: #ffffff;
+  --surface-raised: #fbfbfc;
+  --hairline: oklch(0 0 0 / 9%);
+  --card: #ffffff;
+  --card-foreground: #101214;
+  --popover: #ffffff;
+  --popover-foreground: #101214;
+  --primary: #14171c;
+  --primary-foreground: #f7f7f8;
+  --secondary: #eeeef0;
+  --secondary-foreground: #14171c;
+  --muted: #efeff1;
+  --muted-foreground: #61666e;
+  --accent: #eaeaec;
+  --accent-foreground: #14171c;
+  --destructive: #dc2626;
+  --border: oklch(0 0 0 / 10%);
+  --input: oklch(0 0 0 / 14%);
+  --ring: #b08a45;
+  --gold: #a97f34;
+  --gold-soft: #c9a765;
+  --live: #a97f34;
+  --success: #15803d;
+  --warning: #b45309;
+  --info: #1d4ed8;
+  --chart-1: #b08a45;
+  --chart-2: #8b929c;
+  --chart-3: #61666e;
+  --chart-4: #43474d;
+  --chart-5: #2a2d31;
+  --radius: 0.75rem;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #101214;
+  --sidebar-primary: #14171c;
+  --sidebar-primary-foreground: #f7f7f8;
+  --sidebar-accent: #eaeaec;
+  --sidebar-accent-foreground: #14171c;
+  --sidebar-border: oklch(0 0 0 / 10%);
+  --sidebar-ring: #b08a45;
+}
+
+.dark {
+  --background: #08090b;
+  --foreground: #eceef1;
+  --surface: #0e1014;
+  --surface-raised: #14171c;
+  --hairline: oklch(1 0 0 / 7%);
+  --card: #0e1014;
+  --card-foreground: #eceef1;
+  --popover: #12151a;
+  --popover-foreground: #eceef1;
+  --primary: #e7c88b;
+  --primary-foreground: #17130a;
+  --secondary: #191d23;
+  --secondary-foreground: #e6e8eb;
+  --muted: #14171c;
+  --muted-foreground: #8b929c;
+  --accent: #1b2027;
+  --accent-foreground: #f4f5f7;
+  --destructive: #f87171;
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.83 0.06 85 / 55%);
+  --gold: #e7c88b;
+  --gold-soft: #f6e3b8;
+  --live: #e7c88b;
+  --success: #4ade80;
+  --warning: #fbbf24;
+  --info: #60a5fa;
+  --chart-1: #e7c88b;
+  --chart-2: #c39d5a;
+  --chart-3: #6b7280;
+  --chart-4: #464c55;
+  --chart-5: #262b32;
+  --sidebar: #0a0b0e;
+  --sidebar-foreground: #e6e8eb;
+  --sidebar-primary: #e7c88b;
+  --sidebar-primary-foreground: #17130a;
+  --sidebar-accent: #171b21;
+  --sidebar-accent-foreground: #f4f5f7;
+  --sidebar-border: oklch(1 0 0 / 7%);
+  --sidebar-ring: oklch(0.83 0.06 85 / 55%);
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+--------------------------------------------------------------------------- */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    -webkit-tap-highlight-color: transparent;
+    /* Paired with data-scroll-behavior="smooth" on <html> (src/app/layout.tsx)
+       so Next keeps SPA route transitions jumping to the top instantly. */
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground;
+    text-rendering: optimizeLegibility;
+  }
+  h1,
+  h2,
+  h3 {
+    letter-spacing: -0.02em;
+  }
+  ::selection {
+    background: color-mix(in oklch, var(--gold) 30%, transparent);
+    color: var(--foreground);
+  }
+  /* One slim, low-contrast scrollbar everywhere (panels scroll a lot). */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: oklch(1 0 0 / 14%) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: oklch(1 0 0 / 12%);
+    background-clip: content-box;
+    border: 3px solid transparent;
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: oklch(1 0 0 / 22%);
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Surface + atmosphere primitives
+--------------------------------------------------------------------------- */
+@layer components {
+  /* Default elevated panel: the workhorse card of the studio. */
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-xl);
+    box-shadow:
+      inset 0 1px 0 oklch(1 0 0 / 3%),
+      0 24px 48px -40px oklch(0 0 0 / 90%);
+  }
+  /* Recessed well used inside panels (prompt box, spec rows, preview frame). */
+  .well {
+    background: color-mix(in oklch, var(--background) 82%, var(--surface));
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-lg);
+  }
+  .glass {
+    background: color-mix(in oklch, var(--background) 72%, transparent);
+    backdrop-filter: blur(18px) saturate(140%);
+    border: 1px solid var(--hairline);
+  }
+  /* Warm + cool bloom behind hero/empty-state content. */
+  .atmosphere::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    z-index: -1;
+    border-radius: inherit;
+    background:
+      radial-gradient(58% 48% at 12% 0%, oklch(0.83 0.06 85 / 12%), transparent 62%),
+      radial-gradient(52% 44% at 88% 4%, oklch(0.72 0.12 250 / 10%), transparent 66%);
+    pointer-events: none;
+  }
+  .grid-lines {
+    background-image:
+      linear-gradient(to right, oklch(1 0 0 / 3.5%) 1px, transparent 1px),
+      linear-gradient(to bottom, oklch(1 0 0 / 3.5%) 1px, transparent 1px);
+    background-size: 36px 36px;
+  }
+  /* Gold type + surfaces, straight from the logo's champagne bevel. */
+  .gold-text {
+    background-image: linear-gradient(96deg, #f8ecc9 0%, #e7c88b 44%, #c39d5a 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .gold-surface {
+    background-image: linear-gradient(180deg, #f4e5bb 0%, #e7c88b 52%, #d3ae6c 100%);
+  }
+  .gold-ring {
+    box-shadow:
+      0 0 0 1px oklch(0.83 0.06 85 / 35%),
+      0 18px 40px -22px oklch(0.83 0.06 85 / 40%);
+  }
+  /* Live/running indicator. */
+  .status-dot {
+    position: relative;
+    display: inline-flex;
+    height: 0.5rem;
+    width: 0.5rem;
+    flex-shrink: 0;
+    border-radius: 999px;
+    background: currentColor;
+  }
+  .status-dot::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    background: currentColor;
+    animation: ping-soft 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+  .shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      oklch(1 0 0 / 6%),
+      transparent
+    );
+    animation: shimmer 1.8s infinite;
+  }
+  .track {
+    display: block;
+    height: 0.25rem;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 999px;
+    background: oklch(1 0 0 / 8%);
+  }
+  .num {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Motion
+--------------------------------------------------------------------------- */
+@keyframes ping-soft {
+  0% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+}
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes drift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(2%, -3%, 0) scale(1.08);
+  }
+}
+@keyframes sweep {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+.animate-rise {
+  animation: rise 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.animate-drift {
+  animation: drift 20s ease-in-out infinite alternate;
+}
+/* Sweeps a soft gold highlight across a progress bar while a render is live. */
+.animate-sweep {
+  background-size: 200% 100%;
+  animation: sweep 2.2s linear infinite;
+}
+
+@keyframes drawer-in {
+  from {
+    transform: translateX(-100%);
+    opacity: 0.4;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+.animate-drawer {
+  animation: drawer-in 0.24s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
