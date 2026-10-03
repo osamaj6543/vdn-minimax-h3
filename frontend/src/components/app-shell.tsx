@@ -20,6 +20,7 @@ import {
 import { VdnLogo, VdnMark } from "@/components/brand";
 import { useSession } from "@/components/session-provider";
 import { Splash } from "@/components/splash";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -87,7 +88,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <button
             type="button"
             aria-label="Close navigation"
-            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+            className="absolute inset-0 bg-scrim backdrop-blur-sm"
             onClick={() => setDrawerOpen(false)}
           />
           <div className="animate-drawer absolute inset-y-0 left-0 flex w-[280px] flex-col border-r border-sidebar-border bg-sidebar">
@@ -195,6 +196,7 @@ function TopBar({
             <Plus className="size-3.5" />
             New render
           </Link>
+          <ThemeToggle />
           <UserMenu
             initial={initial}
             name={displayName}
@@ -271,7 +273,7 @@ function SidebarBody({
         ))}
       </nav>
 
-      <div className="mt-auto rounded-xl border border-hairline bg-white/[0.02] p-3">
+      <div className="mt-auto rounded-xl border border-hairline bg-tint/[0.02] p-3">
         <p className="flex items-center gap-1.5 text-[0.6rem] tracking-[0.2em] text-muted-foreground uppercase">
           <ShieldCheck className="size-3.5 text-gold" />
           Plan
@@ -316,7 +318,7 @@ function NavLink({
         "group relative flex items-center gap-3 rounded-xl px-2.5 py-2 transition-colors",
         active
           ? "bg-sidebar-accent text-foreground ring-1 ring-hairline"
-          : "text-muted-foreground hover:bg-white/[0.03] hover:text-foreground",
+          : "text-muted-foreground hover:bg-tint/[0.03] hover:text-foreground",
       )}
     >
       <span
@@ -324,7 +326,7 @@ function NavLink({
           "grid size-8 shrink-0 place-items-center rounded-lg border transition-colors",
           active
             ? "border-gold/30 bg-gold/10 text-gold-soft"
-            : "border-hairline bg-white/[0.02]",
+            : "border-hairline bg-tint/[0.02]",
         )}
       >
         <Icon className="size-4" />
@@ -362,7 +364,7 @@ function ConnectionPill({
           ? `Gateway unreachable${cause ? ` (${cause})` : ""} — start it with: python -m server.app`
           : "Gateway health, relayed by /api/health"
       }
-      className="hidden items-center gap-2 rounded-full border border-hairline bg-white/[0.03] px-2.5 py-1 text-[0.7rem] sm:inline-flex"
+      className="hidden items-center gap-2 rounded-full border border-hairline bg-tint/[0.03] px-2.5 py-1 text-[0.7rem] sm:inline-flex"
     >
       <span className={cn("status-dot", meta.tone)} />
       <span className={meta.tone}>{meta.label}</span>
@@ -390,7 +392,7 @@ function UserMenu({
           <button
             type="button"
             aria-label="Account menu"
-            className="grid size-9 shrink-0 place-items-center rounded-full border border-hairline bg-white/[0.04] text-xs font-medium transition-colors hover:bg-white/[0.08] focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+            className="grid size-9 shrink-0 place-items-center rounded-full border border-hairline bg-tint/[0.04] text-xs font-medium transition-colors hover:bg-tint/[0.08] focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
           />
         }
       >

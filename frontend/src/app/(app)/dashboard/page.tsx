@@ -67,7 +67,7 @@ export default function DashboardPage() {
         <dl className="flex flex-wrap gap-x-6 gap-y-3">
           {FACTS.map(({ icon: Icon, label, value, hint }) => (
             <div key={label} className="flex items-center gap-2.5">
-              <span className="grid size-8 place-items-center rounded-lg border border-hairline bg-white/[0.03] text-gold/80">
+              <span className="grid size-8 place-items-center rounded-lg border border-hairline bg-tint/[0.03] text-gold/80">
                 <Icon className="size-4" />
               </span>
               <div className="flex flex-col">
@@ -86,7 +86,7 @@ export default function DashboardPage() {
       {live && (
         <Link
           href={`/jobs/${live.job_id}`}
-          className="panel flex flex-wrap items-center gap-3 px-4 py-3 transition-colors hover:bg-white/[0.03]"
+          className="panel flex flex-wrap items-center gap-3 px-4 py-3 transition-colors hover:bg-tint/[0.03]"
         >
           <JobStatusBadge state={live.state} />
           <span className="min-w-0 flex-1 truncate text-sm text-muted-foreground">

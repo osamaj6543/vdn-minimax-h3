@@ -309,6 +309,112 @@ full context even after a previous session's context window is exhausted.
 - Live-fire checklist written into the answer (Console: project, web platform
   origin, API key scopes tables/files; then the script; then env vars).
 
+### 2026-10-03 04:03 local — Session 9: cloud-validation guide + two script fixes
+
+- Wrote `docs/cloud_validation_guide.md`: a complete runbook for validating on
+  a rented single H100 80GB - hardware/disk/time/cost table, Step 0 "get YOUR
+  repo onto the box" (fork-push and tarball paths), tmux-protected run, the
+  WORKDIR-must-be-the-parent rule, stage-by-stage expectations, result
+  collection, a troubleshooting table, teardown, and three appendices
+  (manual equivalent; live-fire the real gateway+worker on the same box;
+  one-screen TL;DR).
+- Fixed two REAL blockers in `deploy/cloud_validate.sh` found while writing it:
+  1. the script cloned the UPSTREAM repo, which has no `server/` - the harness
+     lives only in this fork, so stage 8 would die. Added a fail-fast guard
+     after the clone with a message pointing at the guide, plus guidance to
+     set REPO_URL to the fork. (Also documented tarball upload for users who
+     do not want to push a fork.)
+  2. `server/requirements.txt` (pydantic, fastapi, ...) was never installed,
+     but `server/schemas.py` imports pydantic, so `python -m server.validate_gpu`
+     would have failed at import. Added the install to stage 5.
+- The guide's Appendix B closes the second standing gate for free while the
+  box is rented: Redis + gateway + real-engine worker + a real t2v job through
+  HTTP (Phase 1's acceptance criterion, never yet run against real weights).
+- Verification: script passes `bash -n` (LF endings confirmed byte-wise);
+  guide is 410 lines. GPU execution still requires the rental - the guide is
+  the instrument for it.
+
+### 2026-10-03 18:14 local — Session 10: workstation Blackwell (RTX PRO 6000) support
+
+- Question answered: can `deploy/cloud_validate.sh` run on an RTX PRO 6000
+  Blackwell instead of an H100? **Yes, with two architecture caveats** -
+  verified against the repo's own gates rather than assumed:
+  - the card reports **sm_122** (compute capability 12.2) for the Workstation
+    Edition (PyTorch issue #157549), so it is a non-FA4 card: the repo gates
+    FA4 by MEMBERSHIP (`FA4_MAJORS = (9, 10, 11)`), never `>=`, and
+    docs/inference.md lists sm120-class cards on the Triton / torch-varlen
+    fallback row. Supported, but the tuned path (and therefore the README
+    timings) does not apply.
+  - fp8 is still allowed (12 >= 9) and the card has 96 GB (more than the
+    documented 80 GB envelope), so memory is not the constraint; the risk was
+    PyTorch, not the repo.
+- Fixed the real rental-wasting gap found while answering:
+  1. **Stage 5b added**: a real `torch.zeros(1, device="cuda").add_(1)` kernel
+     launch right after the torch install and BEFORE the 82 GB download. Older
+     torch builds fail hard on sm_122 ("not compatible with the current
+     PyTorch installation"); previously that surfaced only at stage 8, after
+     ~30 min of download.
+  2. **flash-attn-4 install fallback**: `-e .` now retries without FA4
+     (`--no-deps` + the explicit pyproject dep list) if the full install
+     fails, which is the expected outcome on a non-FA4 arch. FA4 is unused on
+     those cards anyway.
+- `server/preflight.py`: added an informational `fa4-arch` check that reads the
+  repo's own `FA4_MAJORS` and states which kernel path the card got. Always
+  passes (non-FA4 is a supported fallback, not a failure), so `all_ok()`
+  semantics are untouched.
+- `docs/cloud_validation_guide.md`: new "Which card?" section (per-architecture
+  table, the membership-gate quote, the sm_122/PyTorch caveat) plus four
+  troubleshooting rows.
+- Verification: script `bash -n` exit 0 (LF byte-checked); preflight compiles
+  and still runs on this torch-less box (returns the single torch check);
+  81/81 server tests pass.
+
+### 2026-09-29 — Session 9: public landing page at `/`
+
+- Replaced the root redirect (`/` → /login | /dashboard) with a real product
+  landing page. `src/app/page.tsx` is a **server** component (exports metadata,
+  ships no client JS of its own) composing: hero + live render console, the
+  reference metrics band, the five-mode explorer, performance + request
+  lifecycle, hybrid-attention architecture, the platform/enterprise surface,
+  the open-source release + API surface, the FAQ and a closing CTA.
+- `/` stays public even when signed in: the header CTA reads the live session
+  and shows "Open studio" instead of bouncing the visitor into the app, so no
+  guard change was needed — `src/proxy.ts` still covers only /dashboard, /jobs,
+  /settings, /login and /register (verified: `/dashboard` still 307s to /login
+  for an anonymous caller, `/login` still 200).
+- New landing-only pieces, all under `src/components/landing/`: `landing-nav`
+  (sticky nav + mobile menu), `landing-cta` (session-aware CTAs),
+  `render-console` (animated hero job view: queued → 8 NFEs → muxed artifact),
+  `mode-explorer`, `faq-accordion`, `landing-footer`. Copy and figures live in
+  `src/lib/landing.ts`.
+- Claim discipline: every number on the page is quoted from a source in this
+  repo — README (6.9 s denoise / 8 steps / 9.0 s end-to-end / 14.4 s clip /
+  8×B200), `server/README.md` ("API sketch", incl. tiers, pools, 503 +
+  Retry-After), `src/lib/estimate.ts` (the same reference constants), and the
+  licence split (Apache-2.0 code, MiniMax H3 Community Licence weights). No
+  benchmark, throughput or uptime claim was invented; the console's NFE timings
+  are the published ones labelled as illustrative.
+- Motion/SSR: the console's first paint is the deterministic "queued" frame
+  (no hydration mismatch) and it pins to the finished state under
+  `prefers-reduced-motion`, matching the existing globals.css block.
+- Verification: `npm run build` passes (typecheck clean; `/` prerendered as
+  static, 9 pages generated). Live smoke on `next start -p 3105`: `/` → 200
+  (165 KB HTML) with all seven section ids, 5 mode controls, 6 FAQ panels and
+  the release links present; `/dashboard` → 307 to /login; `/login` → 200.
+- Follow-up (same session): the landing page is now **full-bleed** instead of a
+  centred column. Every `mx-auto w-full max-w-6xl` wrapper was replaced by
+  `LANDING_SHELL` (`src/components/landing/shell.ts` =
+  `w-full px-5 sm:px-8 lg:px-12 2xl:px-16`), used by the nav, all nine section
+  bodies and both footer rows so they share one page edge; the hero console
+  column widened to 30rem. Readability measures were kept deliberately (hero
+  lead `max-w-2xl`, `SectionIntro` lead `max-w-2xl`, FAQ `max-w-4xl`, mode detail
+  `max-w-3xl`) because full width is a layout decision, not a line-length one.
+  Two wide-screen wins came with it: the mode panel's guidance/example wells sit
+  side by side at `xl`, and the hero console column grows with the viewport.
+  Re-verified: build clean (TypeScript 22 s, `/` still static), `/` → 200 with
+  **no** `max-w-6xl`/`mx-auto` left in the markup and 23 shell-wrapped nodes; the
+  new `lg:px-12` / `2xl:px-16` / `xl:grid-cols-2` utilities are in the emitted CSS.
+
 
 ---
 

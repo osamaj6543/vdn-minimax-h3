@@ -3,10 +3,13 @@
 import { Toaster as Sonner, type ToasterProps } from "sonner"
 import { CircleCheckIcon, InfoIcon, TriangleAlertIcon, OctagonXIcon, Loader2Icon } from "lucide-react"
 
-/** App toasts. VDN Studio is dark-only, so the theme is pinned rather than
- *  inherited from the OS (a light OS must not paint light toasts on our
- *  dark tokens). */
-const Toaster = ({ theme = "dark", ...props }: ToasterProps) => {
+import { useTheme } from "@/components/theme-provider"
+
+/** App toasts. Rendering is pinned to the app's own colour scheme — dark unless
+ *  the user switched to light — rather than inherited from the OS, so a light
+ *  OS never paints light chrome on our ink tokens (and vice versa). */
+const Toaster = ({ ...props }: ToasterProps) => {
+  const { theme } = useTheme()
   return (
     <Sonner
       theme={theme}

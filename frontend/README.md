@@ -65,6 +65,13 @@ browser ──POST /api/auth/login──▶ Next route handler ──▶ Appwrit
 
 ## What it does
 
+- **Landing page (`/`)**: the public product story — the measured reference
+  figures, the five modes, the hybrid-attention path, the platform surface
+  (auth, lanes, telemetry, API) and the release links. Every claim is sourced:
+  `src/lib/landing.ts` holds the copy and names the file each figure came from.
+  The header CTA resolves against the live session (`Open studio` when signed
+  in, `Get started` / `Sign in` otherwise), and `/` is deliberately *not* behind
+  the auth guard.
 - **Auth (server-side)**: email/password register + login, exchanged by the
   Next.js server with an Appwrite API key. The Appwrite session lives in an
   httpOnly, AES-256-GCM-sealed cookie; the gateway JWT is minted server-side and
@@ -88,7 +95,9 @@ such — see `src/lib/estimate.ts`.
 
 ## Design system (UI)
 
-Dark, ink-and-champagne, built from the supplied VDN logo:
+Ink-and-champagne, built from the supplied VDN logo. **Dark is the product
+theme and the default** — a first visit (and any visitor with JavaScript
+disabled) always gets it. **Light is opt-in** per user.
 
 - **Tokens** live in `src/app/globals.css` (`@theme inline` + `.dark`). Surfaces
   are near-black (`--surface`), the accent is the logo's gold (`--gold`), and
@@ -96,6 +105,22 @@ Dark, ink-and-champagne, built from the supplied VDN logo:
   Component classes: `.panel`, `.well`, `.glass`, `.grid-lines`, `.gold-text`,
   `.gold-surface`, `.status-dot`, `.track`, `.num`, plus motion helpers
   (`.animate-rise`, `.animate-drift`, `.animate-sweep`, `.animate-drawer`).
+- **Theming**: `:root` holds the *light* palette and `.dark` the dark one, so
+  `dark` being server-rendered on `<html>` makes dark the no-JS default.
+  Theme-aware helpers (`--tint`, `--code`, `--scrim`, `--grid-line`,
+  `--shimmer`, `--track`, `--scrollbar-*`, `--panel-*`, `--gold-text-*`) exist so
+  a single utility reads correctly in both schemes — write `bg-tint/[0.03]`,
+  `bg-code` or `bg-scrim`, **never** a literal `bg-white/…`/`bg-black/…` for
+  chrome. White-on-black overlays that sit on top of imagery or video frames are
+  the deliberate exception and stay literal.
+- **Switching**: `src/lib/theme.ts` owns the storage key, the colours and the
+  pre-paint `THEME_INIT_SCRIPT` that the root layout inlines into `<head>` (so a
+  light-mode visitor never sees a dark flash). `src/components/theme-provider.tsx`
+  wraps that in a `useSyncExternalStore` context whose source of truth is the
+  `<html class="dark">` class itself, and `src/components/theme-toggle.tsx` is the
+  switch — its sun/moon glyphs are chosen in CSS so the right one is painted on
+  the first frame. The toggle is mounted in the studio top bar, the landing nav
+  and the auth screens; Settings → Appearance is the labelled control.
 - **Brand**: `src/components/brand.tsx` traces the real logo paths from
   `assets/Logo/source/vdn-logo.html`, so the mark stays pixel-accurate and
   inherits `currentColor` with the champagne play triangle.
@@ -106,6 +131,11 @@ Dark, ink-and-champagne, built from the supplied VDN logo:
 - **Accessibility**: focus rings on every control, `aria-pressed`/`aria-current`
   on toggles and nav, labelled icon-only buttons, and a
   `prefers-reduced-motion` block that disables animation.
+- **Layout**: the landing page is full-bleed. `LANDING_SHELL`
+  (`src/components/landing/shell.ts`) is the one horizontal-rhythm token — the
+  nav, all nine section bodies and both footer rows use it, so they share the
+  same page edge at every width while long-form copy keeps its own readable
+  `max-w-*` measure.
 
 ## Layout
 
@@ -133,10 +163,14 @@ src/components/register-form.tsx      sign-up form (client)
 src/components/server-config-notice.tsx  shows missing server auth env vars
 src/components/brand.tsx              logo mark + lockup
 src/components/splash.tsx             branded loading state
+src/components/landing/*.tsx          landing pieces: nav, CTAs, hero console,
+                                      mode explorer, FAQ accordion, footer
+src/lib/landing.ts     landing copy — figures, links, FAQ (each sourced inline)
 src/components/create-video-form.tsx  the studio form + spec rail
 src/components/job-bits.tsx           status pill, NFE progress, player, thumbnail
 src/components/job-elapsed.tsx        ticking elapsed time for live renders
 src/components/recent-renders.tsx     latest renders strip on the dashboard
+src/app/page.tsx       public landing page (hero, modes, platform, FAQ, CTA)
 src/app/(app)/…        guarded pages: dashboard, jobs, jobs/[id], settings
 ```
 

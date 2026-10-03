@@ -9,23 +9,35 @@ import {
   Copy,
   KeyRound,
   LogOut,
+  Moon,
   RefreshCw,
   ShieldCheck,
+  Sun,
+  SunMoon,
   User,
   type LucideIcon,
 } from "lucide-react";
 
 import { useSession } from "@/components/session-provider";
+import { useTheme } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { checkHealth, type HealthReport } from "@/lib/api";
 import { copyText } from "@/lib/clipboard";
+import { DEFAULT_THEME, type Theme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 
 type Health = "unknown" | "ok" | "down";
 
+/** Order matters: dark first, because dark is the product default. */
+const THEME_OPTIONS: { key: Theme; icon: LucideIcon; label: string }[] = [
+  { key: "dark", icon: Moon, label: "Dark" },
+  { key: "light", icon: Sun, label: "Light" },
+];
+
 export default function SettingsPage() {
   const { user, logout } = useSession();
+  const { theme, setTheme } = useTheme();
   const router = useRouter();
   const [testing, setTesting] = useState(false);
   const [health, setHealth] = useState<Health>("unknown");
@@ -72,7 +84,7 @@ export default function SettingsPage() {
       <section className="panel p-5">
         <SectionHeading icon={User} title="Account" hint="Managed by Appwrite" />
         <div className="mt-5 flex items-center gap-4">
-          <span className="grid size-12 shrink-0 place-items-center rounded-full border border-hairline bg-white/[0.04] text-base font-medium">
+          <span className="grid size-12 shrink-0 place-items-center rounded-full border border-hairline bg-tint/[0.04] text-base font-medium">
             {initial}
           </span>
           <div className="flex min-w-0 flex-col">
@@ -120,6 +132,44 @@ export default function SettingsPage() {
 
       <section className="panel p-5">
         <SectionHeading
+          icon={SunMoon}
+          title="Appearance"
+          hint="Remembered in this browser only"
+        />
+        <div className="mt-5 flex flex-wrap items-center gap-3">
+          <div
+            role="group"
+            aria-label="Colour scheme"
+            className="flex items-center rounded-lg border border-hairline bg-tint/[0.02] p-0.5"
+          >
+            {THEME_OPTIONS.map(({ key, icon: Icon, label }) => (
+              <button
+                key={key}
+                type="button"
+                aria-pressed={theme === key}
+                onClick={() => setTheme(key)}
+                className={cn(
+                  "flex h-7 items-center gap-1.5 rounded-md px-2.5 text-[0.75rem] transition-colors",
+                  theme === key
+                    ? "bg-tint/[0.07] text-foreground"
+                    : "text-muted-foreground hover:text-foreground",
+                )}
+              >
+                <Icon className="size-3.5" />
+                {label}
+              </button>
+            ))}
+          </div>
+          <p className="text-[0.75rem] leading-relaxed text-muted-foreground">
+            <span className="capitalize">{DEFAULT_THEME}</span> is the product
+            theme: a first visit always lands there. Your pick is stored in this
+            browser and never sent to the gateway.
+          </p>
+        </div>
+      </section>
+
+      <section className="panel p-5">
+        <SectionHeading
           icon={ShieldCheck}
           title="Plan & limits"
           hint="Applied per API key on the gateway"
@@ -135,11 +185,11 @@ export default function SettingsPage() {
           </p>
         </div>
         <ul className="mt-4 grid gap-2 text-[0.75rem] text-muted-foreground sm:grid-cols-2">
-          <li className="rounded-lg border border-hairline bg-white/[0.02] px-3 py-2">
+          <li className="rounded-lg border border-hairline bg-tint/[0.02] px-3 py-2">
             <span className="text-foreground">Priority lanes</span> — high,
             standard and low are served in order per pool.
           </li>
-          <li className="rounded-lg border border-hairline bg-white/[0.02] px-3 py-2">
+          <li className="rounded-lg border border-hairline bg-tint/[0.02] px-3 py-2">
             <span className="text-foreground">Queue behaviour</span> — jobs are
             durable; a restarted worker reclaims stale renders.
           </li>
@@ -169,7 +219,7 @@ export default function SettingsPage() {
               "flex items-center gap-2 rounded-full border px-2.5 py-1 text-[0.72rem]",
               health === "ok" && "border-success/25 bg-success/10 text-success",
               health === "down" && "border-destructive/30 bg-destructive/10 text-destructive",
-              health === "unknown" && "border-hairline bg-white/[0.03] text-muted-foreground",
+              health === "unknown" && "border-hairline bg-tint/[0.03] text-muted-foreground",
             )}
           >
             <span
@@ -196,25 +246,25 @@ export default function SettingsPage() {
           hint="How this client authenticates"
         />
         <ul className="mt-5 grid gap-2 text-[0.75rem] leading-relaxed text-muted-foreground">
-          <li className="rounded-lg border border-hairline bg-white/[0.02] px-3 py-2">
+          <li className="rounded-lg border border-hairline bg-tint/[0.02] px-3 py-2">
             Your password is posted to this app&apos;s own server, which exchanges
             it with Appwrite. Client JavaScript never sees an Appwrite session.
           </li>
-          <li className="rounded-lg border border-hairline bg-white/[0.02] px-3 py-2">
+          <li className="rounded-lg border border-hairline bg-tint/[0.02] px-3 py-2">
             The session secret is sealed (AES-256-GCM) inside an httpOnly,
             SameSite=Lax cookie — unreadable by scripts and useless if the cookie
             value leaks without the server key.
           </li>
-          <li className="rounded-lg border border-hairline bg-white/[0.02] px-3 py-2">
+          <li className="rounded-lg border border-hairline bg-tint/[0.02] px-3 py-2">
             The gateway JWT is minted server-side per request from that session
             (cached 10 min, 15-min tokens) and attached by the proxy route. It is
             never sent to, or stored in, the browser.
           </li>
-          <li className="rounded-lg border border-hairline bg-white/[0.02] px-3 py-2">
+          <li className="rounded-lg border border-hairline bg-tint/[0.02] px-3 py-2">
             Sign-out revokes the Appwrite session server-side and drops the cached
             JWT, so a copied token cannot outlive the session.
           </li>
-          <li className="rounded-lg border border-hairline bg-white/[0.02] px-3 py-2">
+          <li className="rounded-lg border border-hairline bg-tint/[0.02] px-3 py-2">
             Artifacts are streamed through an auth-gated endpoint and played from
             a local blob URL — no public object host is required.
           </li>
@@ -222,7 +272,7 @@ export default function SettingsPage() {
       </section>
 
       <section className="panel flex flex-wrap items-center gap-4 p-5">
-        <span className="grid size-9 place-items-center rounded-xl border border-hairline bg-white/[0.03] text-muted-foreground">
+        <span className="grid size-9 place-items-center rounded-xl border border-hairline bg-tint/[0.03] text-muted-foreground">
           <CircleHelp className="size-4" />
         </span>
         <div className="flex min-w-0 flex-col">
@@ -233,7 +283,7 @@ export default function SettingsPage() {
             attaches the JWT.
           </p>
         </div>
-        <code className="ml-auto rounded-lg border border-hairline bg-black/40 px-3 py-1.5 font-mono text-[0.7rem] text-muted-foreground">
+        <code className="ml-auto rounded-lg border border-hairline bg-code px-3 py-1.5 font-mono text-[0.7rem] text-muted-foreground">
           POST /api/gateway/v1/video/t2v
         </code>
       </section>
@@ -252,7 +302,7 @@ function SectionHeading({
 }) {
   return (
     <div className="flex items-center gap-3">
-      <span className="grid size-8 shrink-0 place-items-center rounded-lg border border-hairline bg-white/[0.03] text-gold/80">
+      <span className="grid size-8 shrink-0 place-items-center rounded-lg border border-hairline bg-tint/[0.03] text-gold/80">
         <Icon className="size-4" />
       </span>
       <div className="flex flex-col">

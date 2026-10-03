@@ -61,6 +61,24 @@ def run_preflight(checkpoint=None, base_source=None) -> list:
                          "fp8 needs capability >= 9.0" if major < 9
                          else f"sm{major}{minor} supports fp8"))
 
+    # Which window-softmax kernel path this card gets. The repo gates FA4 by
+    # MEMBERSHIP, never `>=` (src/models/softmax_attention/window.py), so a
+    # newer capability number can still be a non-FA4 card. Informational only:
+    # non-FA4 cards are a documented, supported fallback path, not a failure.
+    try:
+        from src.models.softmax_attention.window import FA4_MAJORS
+        if major in FA4_MAJORS:
+            arch_detail = (f"sm{major}{minor} is an FA4 card "
+                           f"(FA4 CuTe / flash kernels)")
+        else:
+            arch_detail = (f"sm{major}{minor} is NOT an FA4 card (FA4 covers "
+                           f"sm{FA4_MAJORS}); window softmax uses the "
+                           f"Triton/torch fallback - supported, but not the "
+                           f"tuned path, so timings differ from the README")
+    except Exception as exc:                 # never fail preflight on this
+        arch_detail = f"could not read FA4_MAJORS from src ({exc})"
+    results.append(check("fa4-arch", True, arch_detail))
+
     diffusers_ok = _class_exists("diffusers", "MiniMaxH3Transformer3DModel") \
         and _class_exists("diffusers", "AutoencoderKLMiniMaxH3") \
         and _class_exists("diffusers", "MiniMaxH3Scheduler")

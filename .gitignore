@@ -9,6 +9,7 @@ scripts/local/
 __pycache__/
 *.pyc
 .claude/
+.commandcode/
 
 # fetched by scripts/setup_diffusers.sh (upstream pin + diffusers_patches/)
 diffusers/

@@ -150,6 +150,13 @@ python -m server.validate_gpu --frames 39 --steps 2    # quick smoke
 The report lands in `server_data/artifacts/validation.mp4.validation.json`;
 paste it into docs/server_plan.md.
 
+**On a rented cloud GPU**, use the turnkey runbook instead:
+[deploy/cloud_validate.sh](../deploy/cloud_validate.sh) with its step-by-step
+guide [docs/cloud_validation_guide.md](../docs/cloud_validation_guide.md)
+(covers getting this fork onto the box, the pinned stack, the 82 GB weights,
+the staged validation, troubleshooting, and an optional live-fire of the
+gateway + real-engine worker on the same instance).
+
 **8-GPU fast lane** (node-exclusive torchrun; run on a node with NO per-GPU
 workers):
 

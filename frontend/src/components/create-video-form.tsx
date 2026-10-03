@@ -303,10 +303,10 @@ export function CreateVideoForm({ jobs = [] }: { jobs?: JobView[] }) {
                 "mt-4 flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed px-4 py-7 text-center transition-colors",
                 dragging
                   ? "border-gold/50 bg-gold/[0.06]"
-                  : "border-white/12 bg-white/[0.015] hover:border-white/20 hover:bg-white/[0.03]",
+                  : "border-tint/12 bg-tint/[0.015] hover:border-tint/20 hover:bg-tint/[0.03]",
               )}
             >
-              <span className="grid size-9 place-items-center rounded-lg border border-hairline bg-white/[0.03] text-muted-foreground">
+              <span className="grid size-9 place-items-center rounded-lg border border-hairline bg-tint/[0.03] text-muted-foreground">
                 <Upload className="size-4" />
               </span>
               <span className="text-sm">Drop images or click to browse</span>
@@ -433,7 +433,7 @@ export function CreateVideoForm({ jobs = [] }: { jobs?: JobView[] }) {
               </Select>
             </Field>
           </div>
-          <p className="mt-4 rounded-lg border border-hairline bg-white/[0.02] px-3 py-2 text-[0.7rem] leading-relaxed text-muted-foreground">
+          <p className="mt-4 rounded-lg border border-hairline bg-tint/[0.02] px-3 py-2 text-[0.7rem] leading-relaxed text-muted-foreground">
             Frames follow the 17n+5 rule used by the repo. Your tier caps the
             priority the gateway accepts; higher lanes are served first by the
             worker pool.
@@ -498,7 +498,7 @@ function PanelHeading({
 }) {
   return (
     <div className="flex items-start gap-3">
-      <span className="grid size-8 shrink-0 place-items-center rounded-lg border border-hairline bg-white/[0.03] text-gold/80">
+      <span className="grid size-8 shrink-0 place-items-center rounded-lg border border-hairline bg-tint/[0.03] text-gold/80">
         <Icon className="size-4" />
       </span>
       <div className="min-w-0">
@@ -558,7 +558,7 @@ function ModeCard({
         "group flex flex-col items-start gap-1.5 rounded-xl border p-3 text-left transition-all",
         active
           ? "border-gold/35 bg-gold/[0.07]"
-          : "border-hairline bg-white/[0.015] hover:border-white/15 hover:bg-white/[0.04]",
+          : "border-hairline bg-tint/[0.015] hover:border-tint/15 hover:bg-tint/[0.04]",
       )}
     >
       <span
@@ -566,7 +566,7 @@ function ModeCard({
           "grid size-7 place-items-center rounded-lg border transition-colors",
           active
             ? "border-gold/30 bg-gold/10 text-gold-soft"
-            : "border-hairline bg-white/[0.03] text-muted-foreground group-hover:text-foreground",
+            : "border-hairline bg-tint/[0.03] text-muted-foreground group-hover:text-foreground",
         )}
       >
         <Icon className="size-3.5" />

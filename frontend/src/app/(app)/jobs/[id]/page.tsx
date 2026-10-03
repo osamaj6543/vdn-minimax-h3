@@ -130,7 +130,7 @@ export default function JobDetailPage({ params }: PageProps<"/jobs/[id]">) {
                 {job.job_id.slice(0, 18)}…
               </h1>
               <JobStatusBadge state={job.state} />
-              <span className="rounded-full border border-hairline bg-white/[0.03] px-2.5 py-0.5 text-[0.7rem] text-muted-foreground">
+              <span className="rounded-full border border-hairline bg-tint/[0.03] px-2.5 py-0.5 text-[0.7rem] text-muted-foreground">
                 {TASK_LABELS[job.task] ?? job.task}
               </span>
             </div>
@@ -229,7 +229,7 @@ export default function JobDetailPage({ params }: PageProps<"/jobs/[id]">) {
               </p>
             </div>
           </div>
-          <pre className="mt-4 max-h-64 overflow-auto rounded-lg border border-hairline bg-black/40 p-3 font-mono text-[0.7rem] whitespace-pre-wrap text-destructive/90">
+          <pre className="mt-4 max-h-64 overflow-auto rounded-lg border border-hairline bg-code p-3 font-mono text-[0.7rem] whitespace-pre-wrap text-destructive/90">
             {job.error ?? "No error detail was recorded."}
           </pre>
           <Link
@@ -311,7 +311,7 @@ export default function JobDetailPage({ params }: PageProps<"/jobs/[id]">) {
           </Button>
         </div>
         <Separator className="my-3" />
-        <p className="rounded-lg border border-hairline bg-black/30 p-3 text-[0.8rem] leading-relaxed whitespace-pre-wrap">
+        <p className="rounded-lg border border-hairline bg-code p-3 text-[0.8rem] leading-relaxed whitespace-pre-wrap">
           {job.prompt}
         </p>
         <dl className="mt-4 grid gap-x-6 gap-y-2 text-[0.75rem] sm:grid-cols-2">
@@ -340,7 +340,7 @@ export default function JobDetailPage({ params }: PageProps<"/jobs/[id]">) {
             {job.image_keys.map((key, index) => (
               <li
                 key={key}
-                className="flex items-center gap-1.5 rounded-lg border border-hairline bg-white/[0.02] px-2 py-1 font-mono text-[0.65rem] text-muted-foreground"
+                className="flex items-center gap-1.5 rounded-lg border border-hairline bg-tint/[0.02] px-2 py-1 font-mono text-[0.65rem] text-muted-foreground"
               >
                 <ImageIcon className="size-3" />
                 {index + 1}. {key.slice(0, 16)}…
@@ -369,7 +369,7 @@ function Tile({
 }) {
   return (
     <div className="panel flex items-center gap-3 p-4">
-      <span className="grid size-9 shrink-0 place-items-center rounded-lg border border-hairline bg-white/[0.03] text-gold/80">
+      <span className="grid size-9 shrink-0 place-items-center rounded-lg border border-hairline bg-tint/[0.03] text-gold/80">
         <Icon className="size-4" />
       </span>
       <div className="flex min-w-0 flex-col">
@@ -406,7 +406,7 @@ function StepBars({ values, expected }: { values: number[]; expected: number }) 
                 ? `NFE ${index + 1}: pending`
                 : `NFE ${index + 1}: ${value.toFixed(2)}s`
             }
-            className="group/bar relative flex h-full flex-1 items-end rounded-sm bg-white/[0.025]"
+            className="group/bar relative flex h-full flex-1 items-end rounded-sm bg-tint/[0.025]"
           >
             <span
               className="w-full rounded-sm bg-gradient-to-t from-gold/35 via-gold to-gold-soft transition-all"

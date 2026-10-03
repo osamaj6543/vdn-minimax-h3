@@ -56,7 +56,7 @@ export function RecentRenders({
         </div>
       ) : jobs.length === 0 ? (
         <div className="panel flex flex-col items-center gap-2 px-6 py-12 text-center">
-          <span className="grid size-10 place-items-center rounded-xl border border-hairline bg-white/[0.03] text-muted-foreground">
+          <span className="grid size-10 place-items-center rounded-xl border border-hairline bg-tint/[0.03] text-muted-foreground">
             <Film className="size-4" />
           </span>
           <p className="text-sm">No renders yet</p>

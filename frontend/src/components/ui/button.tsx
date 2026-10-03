@@ -8,8 +8,11 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary/80",
+        // The champagne bevel is always a *light* gradient, so it takes a fixed
+        // ink label instead of `text-primary-foreground` — which would be near
+        // white on light surfaces (`--primary-foreground` flips per theme).
         brand:
-          "gold-surface text-primary-foreground font-semibold shadow-[0_14px_34px_-16px_oklch(0.83_0.06_85/55%)] hover:brightness-[1.07] active:brightness-[0.97]",
+          "gold-surface text-[#17130a] font-semibold shadow-[0_14px_34px_-16px_oklch(0.83_0.06_85/55%)] hover:brightness-[1.07] active:brightness-[0.97]",
         outline:
           "border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
         secondary:

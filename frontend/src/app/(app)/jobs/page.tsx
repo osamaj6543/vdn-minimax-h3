@@ -186,7 +186,7 @@ export default function JobsPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="flex items-center rounded-lg border border-hairline bg-white/[0.02] p-0.5">
+          <div className="flex items-center rounded-lg border border-hairline bg-tint/[0.02] p-0.5">
             {([
               { key: "grid" as ViewMode, icon: LayoutGrid, label: "Grid view" },
               { key: "list" as ViewMode, icon: List, label: "List view" },
@@ -200,7 +200,7 @@ export default function JobsPage() {
                 className={cn(
                   "grid size-7 place-items-center rounded-md transition-colors",
                   view === key
-                    ? "bg-white/[0.07] text-foreground"
+                    ? "bg-tint/[0.07] text-foreground"
                     : "text-muted-foreground hover:text-foreground",
                 )}
               >
@@ -232,7 +232,7 @@ export default function JobsPage() {
                 "flex h-7 items-center gap-1.5 rounded-full border px-3 text-[0.75rem] transition-colors",
                 filter === entry.key
                   ? "border-gold/30 bg-gold/10 text-gold-soft"
-                  : "border-hairline bg-white/[0.02] text-muted-foreground hover:text-foreground",
+                  : "border-hairline bg-tint/[0.02] text-muted-foreground hover:text-foreground",
               )}
             >
               {entry.label}
@@ -465,7 +465,7 @@ function JobList({
         {jobs.map((job) => (
           <li
             key={job.job_id}
-            className="flex flex-wrap items-center gap-4 px-4 py-3 transition-colors hover:bg-white/[0.02]"
+            className="flex flex-wrap items-center gap-4 px-4 py-3 transition-colors hover:bg-tint/[0.02]"
           >
             <Link
               href={`/jobs/${job.job_id}`}
@@ -558,7 +558,7 @@ function EmptyState({
 }) {
   return (
     <div className="panel flex flex-col items-center gap-3 px-6 py-16 text-center">
-      <span className="grid size-11 place-items-center rounded-xl border border-hairline bg-white/[0.03] text-muted-foreground">
+      <span className="grid size-11 place-items-center rounded-xl border border-hairline bg-tint/[0.03] text-muted-foreground">
         <Film className="size-5" />
       </span>
       <div className="flex flex-col gap-1">

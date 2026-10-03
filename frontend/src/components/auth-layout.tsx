@@ -4,6 +4,7 @@
  *  credential card on the right.
  */
 import { VdnLogo, VdnMark } from "@/components/brand";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const STATS = [
   { value: "6.9s", label: "Denoise, 8 steps" },
@@ -50,7 +51,7 @@ export function AuthLayout({
             backbone. Text, first-frame, last-frame, first+last and
             reference-conditioned renders — 768p, 24 fps, audio included.
           </p>
-          <div className="flex items-center gap-3 rounded-xl border border-hairline bg-white/[0.02] px-3.5 py-3">
+          <div className="flex items-center gap-3 rounded-xl border border-hairline bg-tint/[0.02] px-3.5 py-3">
             <span className="grid size-9 shrink-0 place-items-center rounded-lg border border-gold/25 bg-gold/10 text-gold-soft">
               <VdnMark className="h-4" title="" />
             </span>
@@ -74,6 +75,13 @@ export function AuthLayout({
       </aside>
 
       <main className="relative flex items-center justify-center px-5 py-10 sm:px-8">
+        {/* Sign-in and sign-up are reachable before the user is ever inside the
+            studio shell, so the colour scheme has to be switchable here too —
+            otherwise someone who prefers light is stuck on the dark theme until
+            they are signed in. */}
+        <div className="absolute top-4 right-4 sm:top-6 sm:right-6">
+          <ThemeToggle />
+        </div>
         <div
           aria-hidden
           className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(60%_100%_at_50%_0%,oklch(0.83_0.06_85/8%),transparent_70%)] lg:hidden"

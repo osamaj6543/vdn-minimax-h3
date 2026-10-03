@@ -78,11 +78,11 @@ function useArtifact(artifactId: string | null, enabled: boolean) {
 /* -------------------------------------------------------------------------- */
 
 const TONE: Record<string, string> = {
-  queued: "border-hairline bg-white/[0.04] text-muted-foreground",
+  queued: "border-hairline bg-tint/[0.04] text-muted-foreground",
   live: "border-gold/30 bg-gold/10 text-gold-soft",
   success: "border-success/25 bg-success/10 text-success",
   failed: "border-destructive/30 bg-destructive/10 text-destructive",
-  muted: "border-hairline bg-white/[0.03] text-muted-foreground",
+  muted: "border-hairline bg-tint/[0.03] text-muted-foreground",
 };
 
 export function JobStatusBadge({
